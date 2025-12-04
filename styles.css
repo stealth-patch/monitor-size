@@ -1,0 +1,418 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --bg-tertiary: #0f3460;
+  --text-primary: #eaeaea;
+  --text-secondary: #a0a0a0;
+  --accent: #e94560;
+  --grid-color: rgba(255, 255, 255, 0.05);
+  --grid-color-strong: rgba(255, 255, 255, 0.1);
+
+  /* 모니터 크기별 색상 */
+  --color-32: #e94560;
+  --color-27: #0f9b0f;
+  --color-24: #3498db;
+  --color-22: #9b59b6;
+  --color-21-5: #e67e22;
+  --color-19: #1abc9c;
+  --color-34: #f39c12;
+  --color-29: #e74c3c;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* 컨트롤 패널 */
+#controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 20px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--bg-tertiary);
+  flex-wrap: wrap;
+  z-index: 100;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.control-group label,
+.control-group .label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+select {
+  padding: 8px 12px;
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 6px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+select:hover,
+select:focus {
+  border-color: var(--accent);
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.checkbox-item .color-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 2px;
+}
+
+.checkbox-item span {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.buttons {
+  margin-left: auto;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--bg-tertiary);
+  border-radius: 6px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: var(--bg-tertiary);
+  border-color: var(--accent);
+}
+
+button .icon {
+  font-size: 16px;
+}
+
+/* 시각화 영역 */
+#visualArea {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+#gridBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(var(--grid-color-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color-strong) 1px, transparent 1px);
+  background-size:
+    20px 20px,
+    20px 20px,
+    100px 100px,
+    100px 100px;
+  pointer-events: none;
+}
+
+#overlayContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.monitor-overlay {
+  position: absolute;
+  border: 3px solid;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.3);
+  cursor: move;
+  transition: box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.monitor-overlay:hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.monitor-overlay.dragging {
+  opacity: 0.8;
+  z-index: 1000;
+}
+
+.monitor-overlay .overlay-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 12px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.monitor-overlay .overlay-info {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.monitor-overlay .overlay-ratio {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 8px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+/* 내 모니터 레이블 */
+#myMonitorLabel {
+  position: absolute;
+  bottom: 60px;
+  right: 20px;
+  padding: 10px 16px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  text-align: right;
+}
+
+#myMonitorLabel .size {
+  display: block;
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+#myMonitorLabel .dimensions {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* 정보 패널 */
+#infoPanel {
+  padding: 10px 20px;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--bg-tertiary);
+  min-height: 50px;
+}
+
+#monitorInfo {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-item .color-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.info-item .info-text {
+  color: var(--text-secondary);
+}
+
+.info-item .info-value {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* 몰입 모드 토글 버튼 */
+#immersiveBtn {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 14px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--bg-tertiary);
+  z-index: 50;
+}
+
+#immersiveBtn:hover {
+  background-color: rgba(0, 0, 0, 0.9);
+}
+
+/* 몰입 모드 - 패널 숨김 */
+#app.immersive #controls {
+  display: none;
+}
+
+#app.immersive #infoPanel {
+  display: none;
+}
+
+#app.immersive #visualArea {
+  height: 100vh;
+}
+
+#app.immersive #myMonitorLabel {
+  bottom: 20px;
+}
+
+/* 전체 화면 모드 (브라우저 API) */
+#app.fullscreen #controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+}
+
+#app.fullscreen #controls:hover,
+#app.fullscreen #controls:focus-within {
+  transform: translateY(0);
+}
+
+#app.fullscreen #infoPanel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  transition: transform 0.3s;
+}
+
+#app.fullscreen #infoPanel:hover {
+  transform: translateY(0);
+}
+
+#app.fullscreen #visualArea {
+  height: 100vh;
+}
+
+/* 크기별 색상 적용 */
+.color-32 { background-color: var(--color-32); }
+.color-27 { background-color: var(--color-27); }
+.color-24 { background-color: var(--color-24); }
+.color-22 { background-color: var(--color-22); }
+.color-21-5 { background-color: var(--color-21-5); }
+.color-19 { background-color: var(--color-19); }
+.color-34 { background-color: var(--color-34); }
+.color-29 { background-color: var(--color-29); }
+
+.border-32 { border-color: var(--color-32); }
+.border-27 { border-color: var(--color-27); }
+.border-24 { border-color: var(--color-24); }
+.border-22 { border-color: var(--color-22); }
+.border-21-5 { border-color: var(--color-21-5); }
+.border-19 { border-color: var(--color-19); }
+.border-34 { border-color: var(--color-34); }
+.border-29 { border-color: var(--color-29); }
+
+.text-32 { color: var(--color-32); }
+.text-27 { color: var(--color-27); }
+.text-24 { color: var(--color-24); }
+.text-22 { color: var(--color-22); }
+.text-21-5 { color: var(--color-21-5); }
+.text-19 { color: var(--color-19); }
+.text-34 { color: var(--color-34); }
+.text-29 { color: var(--color-29); }
+
+/* 애니메이션 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.monitor-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  #controls {
+    gap: 12px;
+    padding: 10px 12px;
+  }
+
+  .checkbox-group {
+    gap: 8px;
+  }
+
+  .buttons {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

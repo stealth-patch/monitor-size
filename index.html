@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>모니터 크기 비교</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 컨트롤 패널 -->
+    <div id="controls">
+      <div class="control-group">
+        <label for="myMonitor">내 모니터:</label>
+        <select id="myMonitor">
+          <optgroup label="16:9 비율">
+            <option value="32-16:9" selected>32인치</option>
+            <option value="27-16:9">27인치</option>
+            <option value="24-16:9">24인치</option>
+            <option value="22-16:9">22인치</option>
+            <option value="21.5-16:9">21.5인치</option>
+            <option value="19-16:9">19인치</option>
+          </optgroup>
+          <optgroup label="21:9 울트라와이드">
+            <option value="34-21:9">34인치</option>
+            <option value="29-21:9">29인치</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="label">비교할 모니터:</span>
+        <div id="compareOptions" class="checkbox-group">
+          <!-- JavaScript로 동적 생성 -->
+        </div>
+      </div>
+
+      <div class="control-group buttons">
+        <button id="resetBtn" title="위치 초기화">
+          <span class="icon">↺</span> 초기화
+        </button>
+        <button id="fullscreenBtn" title="전체 화면">
+          <span class="icon">⛶</span> 전체 화면
+        </button>
+      </div>
+    </div>
+
+    <!-- 시각화 영역 -->
+    <div id="visualArea">
+      <div id="gridBackground"></div>
+      <div id="overlayContainer">
+        <!-- JavaScript로 오버레이 생성 -->
+      </div>
+      <div id="myMonitorLabel" class="monitor-label">
+        <span class="size"></span>
+        <span class="dimensions"></span>
+      </div>
+      <!-- 몰입 모드 토글 버튼 -->
+      <button id="immersiveBtn" title="패널 숨기기 (I키)">
+        <span class="icon">◱</span>
+      </button>
+    </div>
+
+    <!-- 정보 패널 -->
+    <div id="infoPanel">
+      <div id="monitorInfo">
+        <!-- JavaScript로 정보 표시 -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
